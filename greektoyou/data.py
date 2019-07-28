@@ -3,10 +3,12 @@ import os
 
 from xml.etree import ElementTree
 
+
 class Book:
     def __init__(self, title):
         self.title = title
         self.paragraphs = []
+
 
 class Paragraph:
     def __init__(self):
@@ -16,6 +18,7 @@ class Paragraph:
         for sentence in self.sentences:
             for word in sentence:
                 yield word
+
 
 class Sentence:
     def __init__(self):
@@ -29,6 +32,7 @@ class Sentence:
 
     def __iter__(self):
         yield from self.words
+
 
 class Word:
     def __init__(self, text, prefix, verse):
@@ -49,6 +53,7 @@ class Word:
 
     def __repr__(self):
         return self.__str__()
+
 
 print('Loading sblgnt.xml...')
 books = {}
