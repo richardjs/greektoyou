@@ -1,0 +1,28 @@
+* Basic reading-learning flow
+  1. Show current sentence
+     - i.e. reading place in current book
+  2. New lemmas in sentence are highlighted, prompting user to view definitions
+  3. New word forms in sentence are highlighted, prompting user to view form
+  4. User may view definitions or forms for other words
+     - System tracks what words/forms user needs prompting on, and uses these to generate SRS reviews
+       - Different mode from reading-learning view?
+       - Prompt the user once it is a certain size?
+  5. Once user understands the sentence, he or she marks it as complete
+     - System adds the words and forms to its model of the user's knowledge
+  6. The system shows the next sentence in the book, going back to 1.
+     - Remove highlights from previous sentence?
+* Definitions/form box/pane
+** Box or pane?
+** Show definition and form?
+*** We probably want options to show only one or the other
+** Other features
+*** "Where else have I seen this word/form?"
+*** Number of times lemma appears (in book/in NT)
+*** View other forms of word that occur in NT
+* Questions
+** Will this have multiple modes?
+*** Reading-learning
+**** How do they get started? Pick a book? Recommend a book?
+***** Save place in each book?
+**** How does rereading work?
+*** SRS review of learned cards
