@@ -1,9 +1,18 @@
+{% load staticfiles %}
 <!doctype html>
 <html>
     <head>
         <meta charset="utf-8">
+        <style>
+        .container {
+            font-size: larger;
+        }
+        </style>
+        <link rel="stylesheet" href="{% static 'greektoyou/css/bootstrap.min.css' %}">
     </head>
     <body>
+    <div class="container">
+    <h1 class="display-1">{{book.title}}</h1>
     {% for p in book.paragraphs %}
         <p>
         {% for word in p.words %}
@@ -11,5 +20,6 @@
         {% endfor %}
         </p>
     {% endfor %}
+    </div>
     </body>
 </html>
