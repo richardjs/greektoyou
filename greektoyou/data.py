@@ -35,8 +35,11 @@ class Sentence:
 
 
 class Word:
-    def __init__(self, text, prefix, verse):
+    def __init__(self, text, lemma, pos, parse, prefix, verse):
         self.text = text
+        self.lemma = lemma
+        self.pos = pos
+        self.parse = parse
         self.prefix = prefix
         self.suffix = ''
         self.verse = verse
@@ -55,11 +58,18 @@ class Word:
         return self.__str__()
 
 
-print('Loading sblgnt.xml...')
+morphgnt_dir = os.path.join('data', 'morphgnt-sblgnt')
+morphgnt_filenames = [os.path.join(morphgnt_dir, f)
+                      for f in sorted(os.listdir(morphgnt_dir))]
+
+print('Loading data...')
 books = {}
 xml = ElementTree.parse(os.path.join('data', 'sblgnt.xml'))
 for book_el in xml.findall('book'):
     book = Book(book_el.find('title').text)
+    book_id = book_el.attrib['id']
+
+    morphgnt = open(morphgnt_filenames.pop(0))
 
     verse = None
     for p_el in book_el.findall('p'):
@@ -75,7 +85,9 @@ for book_el in xml.findall('book'):
             elif child.tag == 'prefix':
                 prefix = child.text
             elif child.tag == 'w':
-                sentence.words.append(Word(child.text, prefix, verse))
+                _, pos, parse, _, _, _, lemma = morphgnt.readline().split()
+                sentence.words.append(
+                    Word(child.text, lemma, pos, parse, prefix, verse))
                 prefix = ''
             elif child.tag == 'suffix':
                 sentence.words[-1].suffix = child.text
@@ -83,6 +95,6 @@ for book_el in xml.findall('book'):
                     paragraph.sentences.append(sentence)
                     sentence = Sentence()
 
-    books[book_el.attrib['id']] = book
+    books[book_id] = book
 
 print('Done! %d books loaded.' % len(books))
