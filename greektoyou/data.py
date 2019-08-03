@@ -1,7 +1,45 @@
 import logging
 import os
-
+from functools import lru_cache
 from xml.etree import ElementTree
+
+
+@lru_cache()
+def pos_string(pos):
+    return {
+        'A-': 'adjective',
+        'C-': 'conjunction',
+        'D-': 'adverb',
+        'I-': 'interjection',
+        'N-': 'noun',
+        'P-': 'preposition',
+        'RA': 'definite article',
+        'RD': 'demonstrative pronoun',
+        'RI': 'interrogative/indefinite pronoun',
+        'RP': 'personal pronoun',
+        'RR': 'relative pronoun',
+        'V-': 'verb',
+        'X-': 'particle',
+    }[pos]
+
+
+@lru_cache()
+def parse_string(parse):
+    s = ''
+    s += {'1': '1st person ', '2': '2nd person ',
+          '3': '3rd person '}.get(parse[0], '')
+    s += {'P': 'present ', 'I': 'imperfect ', 'F': 'future ',
+          'A': 'aorist ', 'X': 'perfect ', 'Y': 'pluperfect '}.get(parse[1], '')
+    s += {'A': 'active ', 'M': 'middle ', 'P': 'passive '}.get(parse[2], '')
+    s += {'I': 'indicative ', 'D': 'imperative ', 'S': 'subjunctive ',
+          'O': 'optative ', 'N': 'infinitive ', 'P': 'participle '}.get(parse[3], '')
+    s += {'N': 'nominative ', 'G': 'genitive ',
+          'D': 'dative ', 'A': 'accusative '}.get(parse[4], '')
+    s += {'S': 'singular ', 'P': 'plural '}.get(parse[5], '')
+    s += {'M': 'masculine ', 'F': 'feminine ',
+          'N': 'neuter '}.get(parse[6], '')
+    s += {'C': 'comparative ', 'S': 'superlative '}.get(parse[7], '')
+    return s
 
 
 class Book:
@@ -38,8 +76,8 @@ class Word:
     def __init__(self, text, lemma, pos, parse, prefix, verse):
         self.text = text
         self.lemma = lemma
-        self.pos = pos
-        self.parse = parse
+        self.pos = pos_string(pos)
+        self.parse = parse_string(parse)
         self.prefix = prefix
         self.suffix = ''
         self.verse = verse

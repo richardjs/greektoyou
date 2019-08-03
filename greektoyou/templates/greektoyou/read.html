@@ -3,23 +3,32 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <style>
-        .container {
-            font-size: larger;
-        }
-        </style>
         <link rel="stylesheet" href="{% static 'greektoyou/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'greektoyou/css/greektoyou.css' %}">
     </head>
     <body>
     <div class="container">
-    <h1 class="display-1">{{book.title}}</h1>
+    <h1>{{book.title}}</h1>
     {% for p in book.paragraphs %}
         <p>
-        {% for word in p.words %}
-            {{ word.prefix }}<span>{{ word.text }}</span>{{ word.suffix }}
+        {% for sentence in p.sentences %}
+        <span class="sentence">
+        {% for word in sentence.words %}
+            <span class="word-wrapper">{{ word.prefix }}<span class="word"
+                data-lemma="{{word.lemma}}"
+                data-pos="{{word.pos}}"
+                data-parse="{{word.parse}}"
+            >{{ word.text }}</span>{{ word.suffix }}</span>
+        {% endfor %}
+        </span>
         {% endfor %}
         </p>
     {% endfor %}
+    <div id="info-pane" class="container info-pane">
+        <span id="info-lemma">lemma</span> <small><span id="info-pos">pos</span><br>
+        <span id="info-parse">parse</span>
     </div>
+    </div>
+    <script src="{% static 'greektoyou/js/greektoyou.js' %}"></script>
     </body>
 </html>

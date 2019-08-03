@@ -1,0 +1,26 @@
+body {
+    display: none;
+}
+
+.container {
+    font-size: larger;
+}
+
+.word {
+    cursor: pointer;
+}
+
+.word-wrapper {
+    /*display: none;*/
+}
+
+#info-pane {
+    display: none;
+    position: fixed;
+    bottom: 0px;
+
+    width: 100%;
+
+    background: #fafafa;
+    border: 1px solid black;
+}
