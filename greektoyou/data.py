@@ -73,7 +73,8 @@ class Sentence:
 
 
 class Word:
-    def __init__(self, text, lemma, pos, parse, prefix, verse):
+    def __init__(self, code, text, lemma, pos, parse, prefix, verse):
+        self.code = code
         self.text = text
         self.lemma = lemma
         self.pos = pos_string(pos)
@@ -81,13 +82,6 @@ class Word:
         self.prefix = prefix
         self.suffix = ''
         self.verse = verse
-
-#    def __init__(self, lemma, text, word, form, number):
-#        self.lemma = lemma
-#        self.word = text
-#        self.text = word
-#        self.form = form
-#        self.number = number
 
     def __str__(self):
         return self.text
@@ -101,7 +95,8 @@ morphgnt_filenames = [os.path.join(morphgnt_dir, f)
                       for f in sorted(os.listdir(morphgnt_dir))]
 
 print('Loading data...')
-books = {}
+BOOKS = {}
+WORDS = {}
 xml = ElementTree.parse(os.path.join('data', 'sblgnt.xml'))
 for book_el in xml.findall('book'):
     book = Book(book_el.find('title').text)
@@ -109,13 +104,13 @@ for book_el in xml.findall('book'):
 
     morphgnt = open(morphgnt_filenames.pop(0))
 
+    word_count = 0
     verse = None
     for p_el in book_el.findall('p'):
         paragraph = Paragraph()
         book.paragraphs.append(paragraph)
 
         sentence = Sentence()
-        word = None
         prefix = ''
         for child in p_el:
             if child.tag == 'verse-number':
@@ -124,8 +119,14 @@ for book_el in xml.findall('book'):
                 prefix = child.text
             elif child.tag == 'w':
                 _, pos, parse, _, _, _, lemma = morphgnt.readline().split()
-                sentence.words.append(
-                    Word(child.text, lemma, pos, parse, prefix, verse))
+                code = book_id.lower() + str(word_count)
+                word_count += 1
+
+                word = Word(code, child.text, lemma, pos, parse, prefix, verse)
+
+                sentence.words.append(word)
+                WORDS[word.code] = word
+
                 prefix = ''
             elif child.tag == 'suffix':
                 sentence.words[-1].suffix = child.text
@@ -133,6 +134,6 @@ for book_el in xml.findall('book'):
                     paragraph.sentences.append(sentence)
                     sentence = Sentence()
 
-    books[book_id] = book
+    BOOKS[book_id] = book
 
-print('Done! %d books loaded.' % len(books))
+print('Done! %d books loaded.' % len(BOOKS))

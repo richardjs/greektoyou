@@ -24,3 +24,8 @@ body {
     background: #fafafa;
     border: 1px solid black;
 }
+
+#info-verse {
+    font-size: smaller;
+    float: right;
+}

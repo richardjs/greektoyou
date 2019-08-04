@@ -1,10 +1,21 @@
-from django.http import HttpResponse
+import json
+
+from django.http import JsonResponse
 from django.shortcuts import render
 
-from greektoyou.data import books
+from greektoyou import data
 
 
 def read(req, book_id):
     book_id = book_id.title()
-    book = books[book_id]
+    book = data.BOOKS[book_id]
     return render(req, 'greektoyou/read.html', locals())
+
+
+def api_info(req, word_code):
+    info = dict(data.WORDS[word_code].__dict__)
+    del info['code']
+    del info['text']
+    del info['prefix']
+    del info['suffix']
+    return JsonResponse(info)
