@@ -1,5 +1,6 @@
 import logging
 import os
+import unicodedata
 from functools import lru_cache
 from xml.etree import ElementTree
 
@@ -94,11 +95,11 @@ morphgnt_dir = os.path.join('data', 'morphgnt-sblgnt')
 morphgnt_filenames = [os.path.join(morphgnt_dir, f)
                       for f in sorted(os.listdir(morphgnt_dir))]
 
-print('Loading data...')
+print('Loading sblgnt and morphgnt...')
 BOOKS = {}
 WORDS = {}
-xml = ElementTree.parse(os.path.join('data', 'sblgnt.xml'))
-for book_el in xml.findall('book'):
+sbl_xml = ElementTree.parse(os.path.join('data', 'sblgnt.xml'))
+for book_el in sbl_xml.findall('book'):
     book = Book(book_el.find('title').text)
     book_id = book_el.attrib['id']
 
@@ -137,3 +138,57 @@ for book_el in xml.findall('book'):
     BOOKS[book_id] = book
 
 print('Done! %d books loaded.' % len(BOOKS))
+
+print('Loading strongs...')
+
+DEFINITIONS = {}
+strongs_xml = ElementTree.parse(os.path.join('data', 'strongsgreek.xml'))
+
+number_words = {}
+for entry in strongs_xml.find('entries').findall('entry'):
+    number = int(entry.find('strongs').text)
+    try:
+        word = entry.find('greek').attrib['unicode']
+    except AttributeError:
+        continue
+    number_words[number] = word
+
+for entry in strongs_xml.find('entries').findall('entry'):
+    try:
+        word = entry.find('greek').attrib['unicode']
+        word = unicodedata.normalize('NFC', word)
+
+        # special case
+        # if word == 'τὶς':
+        #    word = 'τις'
+
+    except AttributeError as e:
+        continue
+    definition_e = entry.find('strongs_def')
+    if definition_e == None:
+        definition_e = entry.find('strongs_derivation')
+    if definition_e == None:
+        continue
+
+    number = int(entry.find('strongs').text)
+    definition = ''
+    for e in definition_e.iter():
+        if e.text:
+            definition += e.text
+
+        if e.tag == 'strongsref':
+            if e.attrib['language'] == 'GREEK':
+                definition += number_words[int(e.attrib['strongs'])]
+            else:
+                definition += '#%d' % (int(e.attrib['strongs']))
+        elif e.tag == 'greek':
+            definition += e.attrib['unicode']
+
+        if e.tail:
+            definition += e.tail
+
+    definition = definition.replace('\n', '')
+
+    DEFINITIONS[word] = definition
+
+print('Done!')

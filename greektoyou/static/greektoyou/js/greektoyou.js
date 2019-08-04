@@ -4,6 +4,7 @@ window.addEventListener('load', () => {
     let infoPOS = document.getElementById('info-pos');
     let infoVerse = document.getElementById('info-verse');
     let infoParse = document.getElementById('info-parse');
+    let infoDefinition = document.getElementById('info-definition');
     
     for (let word of document.getElementsByClassName('word')) {
         word.addEventListener('click', () => {
@@ -14,10 +15,18 @@ window.addEventListener('load', () => {
                 infoPOS.innerHTML = data.pos;
                 infoVerse.innerHTML = data.verse;
                 infoParse.innerHTML = data.parse;
+                infoDefinition.innerHTML = data.definition;
+
                 infoPane.style.display = 'block';
             });
         });
     }
+
+    window.addEventListener('keydown', e => {
+        if (e.keyCode === 27) {
+            infoPane.style.display = 'none';
+        }
+    });
 
     document.body.style.display = 'block';
 });
