@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from greektoyou.models import *
+
+admin.site.register(BookProgress)

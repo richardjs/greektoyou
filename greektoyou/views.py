@@ -3,12 +3,16 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from greektoyou import data
+from greektoyou import data, models
 
 
 def read(req, book_id):
-    book_id = book_id.title()
+    book_id = book_id.lower()
     book = data.BOOKS[book_id]
+    # TODO use logged in user here
+    # TODO need an action/default if no progress
+    # TODO read based on progress ID, in case of multiple progresses?
+    book_progress = models.BookProgress.objects.filter(book=book_id)[0]
     return render(req, 'greektoyou/read.html', locals())
 
 

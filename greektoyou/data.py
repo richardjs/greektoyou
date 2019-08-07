@@ -60,7 +60,8 @@ class Paragraph:
 
 
 class Sentence:
-    def __init__(self):
+    def __init__(self, number):
+        self.number = number
         self.words = []
 
     def __str__(self):
@@ -101,17 +102,19 @@ WORDS = {}
 sbl_xml = ElementTree.parse(os.path.join('data', 'sblgnt.xml'))
 for book_el in sbl_xml.findall('book'):
     book = Book(book_el.find('title').text)
-    book_id = book_el.attrib['id']
+    book_id = book_el.attrib['id'].lower()
 
     morphgnt = open(morphgnt_filenames.pop(0))
 
+    sentence_number = 0
     word_count = 0
     verse = None
+    sentence = Sentence(sentence_number)
+    sentence_number += 1
     for p_el in book_el.findall('p'):
         paragraph = Paragraph()
         book.paragraphs.append(paragraph)
 
-        sentence = Sentence()
         prefix = ''
         for child in p_el:
             if child.tag == 'verse-number':
@@ -133,7 +136,8 @@ for book_el in sbl_xml.findall('book'):
                 sentence.words[-1].suffix = child.text
                 if '.' in child.text or ';' in child.text:
                     paragraph.sentences.append(sentence)
-                    sentence = Sentence()
+                    sentence = Sentence(sentence_number)
+                    sentence_number += 1
 
     BOOKS[book_id] = book
 

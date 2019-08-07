@@ -17,7 +17,7 @@
     {% for p in book.paragraphs %}
         <p>
         {% for sentence in p.sentences %}
-        <span class="sentence">
+        <span class="sentence{% if sentence.number > book_progress.sentence %} sentence-not-reached{% endif %}">
         {% for word in sentence.words %}
             <span class="word-wrapper">{{ word.prefix }}<span class="word"
                 data-code="{{word.code}}"
