@@ -16,7 +16,7 @@
     <h1>{{book.title}}</h1>
 
     {% for p in book.paragraphs %}
-    {% if p.sentence[0].number <= book_progress.sentence %}
+    {% if p.sentences.0.number <= book_progress.sentence %}
 
         <p>
         {% for sentence in p.sentences %}
