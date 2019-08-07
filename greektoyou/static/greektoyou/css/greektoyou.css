@@ -2,10 +2,6 @@
     font-size: larger;
 }
 
-.sentence-not-reached {
-    display: none;
-}
-
 .word {
     cursor: pointer;
 }

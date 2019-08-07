@@ -14,19 +14,29 @@
     <body>
     <div id="text-pane" class="container">
     <h1>{{book.title}}</h1>
+
     {% for p in book.paragraphs %}
+    {% if p.sentence[0].number <= book_progress.sentence %}
+
         <p>
         {% for sentence in p.sentences %}
-        <span class="sentence{% if sentence.number > book_progress.sentence %} sentence-not-reached{% endif %}">
+        {% if sentence.number <= book_progress.sentence %}
+
+        <span class="sentence">
         {% for word in sentence.words %}
             <span class="word-wrapper">{{ word.prefix }}<span class="word"
                 data-code="{{word.code}}"
             >{{ word.text }}</span>{{ word.suffix }}</span>
         {% endfor %}
         </span>
+
+        {% endif %}
         {% endfor %}
         </p>
+
+    {% endif %}
     {% endfor %}
+
     <div id="info-pane" class="container info-pane">
         <span id="info-lemma">lemma</span> <small>
         <span id="info-pos">pos</span>
