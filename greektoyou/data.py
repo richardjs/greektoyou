@@ -121,6 +121,8 @@ for book_el in sbl_xml.findall('book'):
                 verse = child.attrib['id']
             elif child.tag == 'prefix':
                 prefix = child.text
+                prefix = prefix.replace('⸀', '')
+                prefix = prefix.replace('⸂', '')
             elif child.tag == 'w':
                 _, pos, parse, _, _, _, lemma = morphgnt.readline().split()
                 code = book_id.lower() + str(word_count)
@@ -133,8 +135,11 @@ for book_el in sbl_xml.findall('book'):
 
                 prefix = ''
             elif child.tag == 'suffix':
-                sentence.words[-1].suffix = child.text
-                if '.' in child.text or ';' in child.text:
+                suffix = child.text
+                suffix = suffix.replace('⸃', '')
+                sentence.words[-1].suffix = suffix
+
+                if '.' in suffix or ';' in suffix:
                     paragraph.sentences.append(sentence)
                     sentence = Sentence(sentence_number)
                     sentence_number += 1
