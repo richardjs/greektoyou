@@ -13,7 +13,7 @@ window.addEventListener('load', () => {
             }).then(data => {
                 infoLemma.innerHTML = data.lemma;
                 infoPOS.innerHTML = data.pos;
-                infoVerse.innerHTML = data.verse;
+                infoVerse.innerHTML = '<a target="_blank" href="https://www.biblegateway.com/passage/?version=ESV&search='+data.verse+'">'+data.verse+'</a>';
                 infoParse.innerHTML = data.parse;
                 infoDefinition.innerHTML = data.definition;
 
